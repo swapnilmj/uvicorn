@@ -301,12 +301,12 @@ class Server:
         self.force_exit = False
         self.last_notified = 0
 
-    def run(self, sockets=None):
+    def run(self, sockets=None, shutdown_servers=True):
         self.config.setup_event_loop()
         loop = asyncio.get_event_loop()
         loop.run_until_complete(self.serve(sockets=sockets))
 
-    async def serve(self, sockets=None):
+    async def serve(self, sockets=None, shutdown_servers=True):
         process_id = os.getpid()
 
         config = self.config
@@ -323,7 +323,7 @@ class Server:
         if self.should_exit:
             return
         await self.main_loop()
-        await self.shutdown()
+        await self.shutdown(shutdown_servers=shutdown_servers)
         self.logger.info("Finished server process [{}]".format(process_id))
 
     async def startup(self, sockets=None):
@@ -419,14 +419,15 @@ class Server:
             return self.server_state.total_requests >= self.config.limit_max_requests
         return False
 
-    async def shutdown(self):
+    async def shutdown(self, shutdown_servers=True):
         self.logger.info("Shutting down")
 
         # Stop accepting new connections.
-        for server in self.servers:
-            server.close()
-        for server in self.servers:
-            await server.wait_closed()
+        if shutdown_servers:
+            for server in self.servers:
+                server.close()
+            for server in self.servers:
+                await server.wait_closed()
 
         # Request shutdown on all existing connections.
         for connection in list(self.server_state.connections):
