@@ -238,6 +238,7 @@ class H11Protocol(asyncio.Protocol):
             elif event_type is h11.Data:
                 if self.conn.our_state is h11.DONE:
                     continue
+                # TODO There's also string concatenation that can slow down things
                 self.cycle.body += event.data
                 if len(self.cycle.body) > HIGH_WATER_LIMIT:
                     self.flow.pause_reading()
