@@ -31,6 +31,7 @@ LOG_LEVELS = {
 HTTP_PROTOCOLS = {
     "auto": "uvicorn.protocols.http.auto:AutoHTTPProtocol",
     "h11": "uvicorn.protocols.http.h11_impl:H11Protocol",
+    "h2": "uvicorn.protocols.http.h2_impl:H2Protocol",
     "httptools": "uvicorn.protocols.http.httptools_impl:HttpToolsProtocol",
 }
 WS_PROTOCOLS = {
@@ -93,7 +94,9 @@ LOGGING_CONFIG = {
 logger = logging.getLogger("uvicorn.error")
 
 
-def create_ssl_context(certfile, keyfile, ssl_version, cert_reqs, ca_certs, ciphers):
+def create_ssl_context(
+    certfile, keyfile, ssl_version, cert_reqs, ca_certs, ciphers, enable_h2
+):
     ctx = ssl.SSLContext(ssl_version)
     ctx.load_cert_chain(certfile, keyfile)
     ctx.verify_mode = cert_reqs
@@ -101,6 +104,22 @@ def create_ssl_context(certfile, keyfile, ssl_version, cert_reqs, ca_certs, ciph
         ctx.load_verify_locations(ca_certs)
     if ciphers:
         ctx.set_ciphers(ciphers)
+    if enable_h2:
+        ctx.options |= (
+            ssl.OP_NO_SSLv2
+            | ssl.OP_NO_SSLv3
+            | ssl.OP_NO_TLSv1
+            | ssl.OP_NO_TLSv1_1
+            | ssl.OP_NO_COMPRESSION
+            | ssl.OP_CIPHER_SERVER_PREFERENCE
+        )
+        ctx.set_ciphers("ECDHE+AESGCM:ECDHE+CHACHA20:DHE+AESGCM:DHE+CHACHA20")
+        ctx.set_alpn_protocols(["h2", "http/1.1"])
+        try:
+            ctx.set_npn_protocols(["h2", "http/1.1"])
+        except NotImplementedError:
+            pass
+
     return ctx
 
 
@@ -237,7 +256,7 @@ class Config:
     def load(self):
         assert not self.loaded
 
-        if self.is_ssl:
+        if self.http == "h2" and self.is_ssl:
             self.ssl = create_ssl_context(
                 keyfile=self.ssl_keyfile,
                 certfile=self.ssl_certfile,
@@ -245,6 +264,17 @@ class Config:
                 cert_reqs=self.ssl_cert_reqs,
                 ca_certs=self.ssl_ca_certs,
                 ciphers=self.ssl_ciphers,
+                enable_h2=True,
+            )
+        elif self.is_ssl:
+            self.ssl = create_ssl_context(
+                keyfile=self.ssl_keyfile,
+                certfile=self.ssl_certfile,
+                ssl_version=self.ssl_version,
+                cert_reqs=self.ssl_cert_reqs,
+                ca_certs=self.ssl_ca_certs,
+                ciphers=self.ssl_ciphers,
+                enable_h2=False,
             )
         else:
             self.ssl = None
