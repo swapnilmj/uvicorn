@@ -564,6 +564,7 @@ Options:
 <p>See the <a href="../settings/">settings documentation</a> for more details on the supported options for running uvicorn.</p>
 <h2 id="running-programmatically">Running programmatically</h2>
 <p>To run directly from within a Python program, you should use <code>uvicorn.run(app, **config)</code>. For example:</p>
+<p><strong>example.py</strong>:</p>
 <div class="codehilite"><pre><span></span><span class="kn">import</span> <span class="nn">uvicorn</span>
 
 <span class="k">class</span> <span class="nc">App</span><span class="p">:</span>
@@ -572,11 +573,19 @@ Options:
 <span class="n">app</span> <span class="o">=</span> <span class="n">App</span><span class="p">()</span>
 
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
-    <span class="n">uvicorn</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">app</span><span class="p">,</span> <span class="n">host</span><span class="o">=</span><span class="s2">&quot;127.0.0.1&quot;</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">5000</span><span class="p">,</span> <span class="n">log_level</span><span class="o">=</span><span class="s2">&quot;info&quot;</span><span class="p">,</span> <span class="nb">reload</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="n">uvicorn</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="s2">&quot;example:app&quot;</span><span class="p">,</span> <span class="n">host</span><span class="o">=</span><span class="s2">&quot;127.0.0.1&quot;</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">5000</span><span class="p">,</span> <span class="n">log_level</span><span class="o">=</span><span class="s2">&quot;info&quot;</span><span class="p">)</span>
 </pre></div>
 
 
 <p>The set of configuration options is the same as for the command line tool.</p>
+<p>Note that the application instance itself <em>can</em> be passed instead of the app
+import string.</p>
+<div class="codehilite"><pre><span></span><span class="n">uvicorn</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">app</span><span class="p">,</span> <span class="n">host</span><span class="o">=</span><span class="s2">&quot;127.0.0.1&quot;</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">5000</span><span class="p">,</span> <span class="n">log_level</span><span class="o">=</span><span class="s2">&quot;info&quot;</span><span class="p">)</span>
+</pre></div>
+
+
+<p>However, this style only works if you are not using multiprocessing (<code>workers=NUM</code>)
+or reloading (<code>reload=True</code>), so we recommend using the import string style.</p>
 <h2 id="using-a-process-manager">Using a process manager</h2>
 <p>Running Uvicorn using a process manager ensures that you can run multiple processes in a resilient manner, and allows you to perform server upgrades without dropping requests.</p>
 <p>A process manager will handle the socket setup, start-up multiple server processes, monitor process aliveness, and listen for signals to provide for processes restarts, shutdowns, or dialing up and down the number of running processes.</p>
