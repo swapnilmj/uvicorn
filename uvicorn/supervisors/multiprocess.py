@@ -5,7 +5,7 @@ import threading
 
 import click
 
-from uvicorn.subprocess import get_subprocess
+from uvicorn.subprocess import get_server_subprocess
 
 HANDLED_SIGNALS = (
     signal.SIGINT,  # Unix signal 2. Sent by Ctrl+C.
@@ -16,9 +16,8 @@ logger = logging.getLogger("uvicorn.error")
 
 
 class Multiprocess:
-    def __init__(self, config, target, sockets):
+    def __init__(self, config, sockets):
         self.config = config
-        self.target = target
         self.sockets = sockets
         self.processes = []
         self.should_exit = threading.Event()
@@ -46,13 +45,15 @@ class Multiprocess:
             signal.signal(sig, self.signal_handler)
 
         for idx in range(self.config.workers):
-            process = get_subprocess(
-                config=self.config, target=self.target, sockets=self.sockets
-            )
+            process = get_server_subprocess(config=self.config, sockets=self.sockets)
             process.start()
             self.processes.append(process)
 
-    def shutdown(self):
+    def shutdown(self, hard=False):
+        if hard:
+            for process in self.processes:
+                os.kill(process.pid, signal.SIGKILL)
+
         for process in self.processes:
             process.join()
 

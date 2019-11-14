@@ -6,7 +6,7 @@ from pathlib import Path
 
 import click
 
-from uvicorn.subprocess import get_subprocess
+from uvicorn.subprocess import get_server_subprocess
 
 HANDLED_SIGNALS = (
     signal.SIGINT,  # Unix signal 2. Sent by Ctrl+C.
@@ -17,9 +17,8 @@ logger = logging.getLogger("uvicorn.error")
 
 
 class StatReload:
-    def __init__(self, config, target, sockets):
+    def __init__(self, config, sockets):
         self.config = config
-        self.target = target
         self.sockets = sockets
         self.should_exit = threading.Event()
         self.pid = os.getpid()
@@ -48,9 +47,7 @@ class StatReload:
         for sig in HANDLED_SIGNALS:
             signal.signal(sig, self.signal_handler)
 
-        self.process = get_subprocess(
-            config=self.config, target=self.target, sockets=self.sockets
-        )
+        self.process = get_server_subprocess(config=self.config, sockets=self.sockets)
         self.process.start()
 
     def restart(self):
@@ -58,12 +55,12 @@ class StatReload:
         os.kill(self.process.pid, signal.SIGTERM)
         self.process.join()
 
-        self.process = get_subprocess(
-            config=self.config, target=self.target, sockets=self.sockets
-        )
+        self.process = get_server_subprocess(config=self.config, sockets=self.sockets)
         self.process.start()
 
-    def shutdown(self):
+    def shutdown(self, hard=False):
+        if hard:
+            os.kill(self.process.pid, signal.SIGKILL)
         self.process.join()
         message = "Stopping reloader process [{}]".format(str(self.pid))
         color_message = "Stopping reloader process [{}]".format(

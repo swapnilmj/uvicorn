@@ -6,12 +6,11 @@ import multiprocessing
 import os
 import platform
 import sys
-import time
 
 spawn = multiprocessing.get_context("spawn")
 
 
-def get_subprocess(config, target, sockets):
+def get_server_subprocess(config, sockets):
     """
     Called in the parent process, to instantiate a new child process instance.
     The child is not yet started at this point.
@@ -38,7 +37,6 @@ def get_subprocess(config, target, sockets):
 
     kwargs = {
         "config": config,
-        "target": target,
         "sockets": sockets,
         "stdin_fileno": stdin_fileno,
     }
@@ -46,7 +44,7 @@ def get_subprocess(config, target, sockets):
     return spawn.Process(target=subprocess_started, kwargs=kwargs)
 
 
-def subprocess_started(config, target, sockets, stdin_fileno):
+def subprocess_started(config, sockets, stdin_fileno):
     """
     Called when the child process starts.
 
@@ -70,4 +68,7 @@ def subprocess_started(config, target, sockets, stdin_fileno):
     config.configure_logging()
 
     # Now we can call into `Server.run(sockets=sockets)`
-    target(sockets=sockets)
+    from uvicorn import Server
+
+    server = Server(config=config)
+    server.run(sockets=sockets)

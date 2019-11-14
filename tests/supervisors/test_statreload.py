@@ -1,16 +1,10 @@
 import os
-import signal
+import pytest
 import sys
 from pathlib import Path
 
-import pytest
-
 from uvicorn.config import Config
 from uvicorn.supervisors import StatReload
-
-
-def run(sockets):
-    pass
 
 
 def test_statreload():
@@ -21,9 +15,9 @@ def test_statreload():
     quit immediately.
     """
     config = Config(app=None, reload=True)
-    reloader = StatReload(config, target=run, sockets=[])
-    reloader.signal_handler(sig=signal.SIGINT, frame=None)
-    reloader.run()
+    reloader = StatReload(config, sockets=[])
+    reloader.startup()
+    reloader.shutdown(hard=True)
 
 
 @pytest.mark.skipif(
@@ -38,8 +32,7 @@ def test_should_reload(tmpdir):
     os.chdir(str(tmpdir))
     try:
         config = Config(app=None, reload=True)
-        reloader = StatReload(config, target=run, sockets=[])
-        reloader.signal_handler(sig=signal.SIGINT, frame=None)
+        reloader = StatReload(config, sockets=[])
         reloader.startup()
 
         assert not reloader.should_restart()
@@ -47,6 +40,6 @@ def test_should_reload(tmpdir):
         assert reloader.should_restart()
 
         reloader.restart()
-        reloader.shutdown()
+        reloader.shutdown(hard=True)
     finally:
         os.chdir(working_dir)
