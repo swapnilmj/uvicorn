@@ -34,7 +34,7 @@
         <meta name="lang:search.tokenizer" content="[\s\-]+">
       
       <link rel="shortcut icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.0.4, mkdocs-material-4.4.2">
+      <meta name="generator" content="mkdocs-1.0.4, mkdocs-material-4.6.0">
     
     
       
@@ -42,17 +42,17 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/application.30686662.css">
+      <link rel="stylesheet" href="../assets/stylesheets/application.1b62728e.css">
       
       
     
     
-      <script src="../assets/javascripts/modernizr.74668098.js"></script>
+      <script src="../assets/javascripts/modernizr.268332fc.js"></script>
     
     
       
         <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700|Roboto+Mono&display=fallback">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700%7CRoboto+Mono&display=fallback">
         <style>body,input{font-family:"Roboto","Helvetica Neue",Helvetica,Arial,sans-serif}code,kbd,pre{font-family:"Roboto Mono","Courier New",Courier,monospace}</style>
       
     
@@ -591,7 +591,7 @@
 <hr />
 <h2 id="request-and-response-bodies">Request and Response bodies</h2>
 <h3 id="response-completion">Response completion</h3>
-<p>Once a response has been sent, Uvicorn will no longer buffer any remaining request body. Any later calls to <code>recieve</code> will return an <code>http.disconnect</code> message.</p>
+<p>Once a response has been sent, Uvicorn will no longer buffer any remaining request body. Any later calls to <code>receive</code> will return an <code>http.disconnect</code> message.</p>
 <p>Together with the read flow control, this behavior ensures that responses that return without reading the request body will not stream any substantial amounts of data into memory.</p>
 <h3 id="expect-100-continue">Expect: 100-Continue</h3>
 <p>The <code>Expect: 100-Continue</code> header may be sent by clients to require a confirmation from the server before uploading the request body. This can be used to ensure that large request bodies are only sent once the client has confirmation that the server is willing to accept the request.</p>
@@ -637,6 +637,7 @@
 <p>Uvicorn supports pipelining pragmatically. It will queue up any pipelined HTTP requests, and pause reading from the underlying transport. It will not start processing pipelined requests until each response has been dealt with in turn.</p>
                 
                   
+                
                 
               
               
@@ -690,9 +691,13 @@
       
     </div>
     
-      <script src="../assets/javascripts/application.c648116f.js"></script>
+      <script src="../assets/javascripts/application.808e90bb.js"></script>
       
       <script>app.initialize({version:"1.0.4",url:{base:".."}})</script>
+      
+        <script src="../js/chat.js"></script>
+      
+        <script src="../js/sidecar-1.5.0.js"></script>
       
     
   </body>

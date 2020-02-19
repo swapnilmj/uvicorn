@@ -34,7 +34,7 @@
         <meta name="lang:search.tokenizer" content="[\s\-]+">
       
       <link rel="shortcut icon" href="assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.0.4, mkdocs-material-4.4.2">
+      <meta name="generator" content="mkdocs-1.0.4, mkdocs-material-4.6.0">
     
     
       
@@ -42,17 +42,17 @@
       
     
     
-      <link rel="stylesheet" href="assets/stylesheets/application.30686662.css">
+      <link rel="stylesheet" href="assets/stylesheets/application.1b62728e.css">
       
       
     
     
-      <script src="assets/javascripts/modernizr.74668098.js"></script>
+      <script src="assets/javascripts/modernizr.268332fc.js"></script>
     
     
       
         <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700|Roboto+Mono&display=fallback">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700%7CRoboto+Mono&display=fallback">
         <style>body,input{font-family:"Roboto","Helvetica Neue",Helvetica,Arial,sans-serif}code,kbd,pre{font-family:"Roboto Mono","Courier New",Courier,monospace}</style>
       
     
@@ -667,16 +667,16 @@ WebSockets, which cannot be handled by WSGI.</p>
 
 
 <p>Create an application, in <code>example.py</code>:</p>
-<div class="codehilite"><pre><span></span><span class="n">async</span> <span class="k">def</span> <span class="nf">app</span><span class="p">(</span><span class="n">scope</span><span class="p">,</span> <span class="n">receive</span><span class="p">,</span> <span class="n">send</span><span class="p">):</span>
+<div class="codehilite"><pre><span></span><span class="k">async</span> <span class="k">def</span> <span class="nf">app</span><span class="p">(</span><span class="n">scope</span><span class="p">,</span> <span class="n">receive</span><span class="p">,</span> <span class="n">send</span><span class="p">):</span>
     <span class="k">assert</span> <span class="n">scope</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;http&#39;</span>
-    <span class="n">await</span> <span class="n">send</span><span class="p">({</span>
+    <span class="k">await</span> <span class="n">send</span><span class="p">({</span>
         <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;http.response.start&#39;</span><span class="p">,</span>
         <span class="s1">&#39;status&#39;</span><span class="p">:</span> <span class="mi">200</span><span class="p">,</span>
         <span class="s1">&#39;headers&#39;</span><span class="p">:</span> <span class="p">[</span>
             <span class="p">[</span><span class="sa">b</span><span class="s1">&#39;content-type&#39;</span><span class="p">,</span> <span class="sa">b</span><span class="s1">&#39;text/plain&#39;</span><span class="p">],</span>
         <span class="p">]</span>
     <span class="p">})</span>
-    <span class="n">await</span> <span class="n">send</span><span class="p">({</span>
+    <span class="k">await</span> <span class="n">send</span><span class="p">({</span>
         <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;http.response.body&#39;</span><span class="p">,</span>
         <span class="s1">&#39;body&#39;</span><span class="p">:</span> <span class="sa">b</span><span class="s1">&#39;Hello, world!&#39;</span><span class="p">,</span>
     <span class="p">})</span>
@@ -692,67 +692,69 @@ WebSockets, which cannot be handled by WSGI.</p>
 <h2 id="usage">Usage</h2>
 <p>The uvicorn command line tool is the easiest way to run your application...</p>
 <h3 id="command-line-options">Command line options</h3>
-<div class="codehilite"><pre><span></span>$ uvicorn --help
-Usage: uvicorn [OPTIONS] APP
+<div class="codehilite"><pre><span></span>Usage: uvicorn [OPTIONS] APP
 
 Options:
---host TEXT                     Bind socket to this host.  [default:
-                                127.0.0.1]
---port INTEGER                  Bind socket to this port.  [default: 8000]
---uds TEXT                      Bind to a UNIX domain socket.
---fd INTEGER                    Bind to socket from this file descriptor.
---reload                        Enable auto-reload.
---reload-dir TEXT               Set reload directories explicitly, instead
-                                of using &#39;sys.path&#39;.
---workers INTEGER               Number of worker processes. Defaults to the
-                                $WEB_CONCURRENCY environment variable if
-                                available. Not valid with --reload.
---loop [auto|asyncio|uvloop|iocp]
-                                Event loop implementation.  [default: auto]
---http [auto|h11|httptools]     HTTP protocol implementation.  [default:
-                                auto]
---ws [auto|none|websockets|wsproto]
-                                WebSocket protocol implementation.
-                                [default: auto]
---lifespan [auto|on|off]        Lifespan implementation.  [default: auto]
---interface [auto|asgi3|asgi2|wsgi]
-                                Select ASGI3, ASGI2, or WSGI as the
-                                application interface.  [default: auto]
---env-file PATH                 Environment configuration file.
---log-config PATH               Logging configuration file.
---log-level [critical|error|warning|info|debug|trace]
-                                Log level. [default: info]
---access-log / --no-access-log  Enable/Disable access log.
---proxy-headers / --no-proxy-headers
-                                Enable/Disable X-Forwarded-Proto,
-                                X-Forwarded-For, X-Forwarded-Port to
-                                populate remote address info.
---forwarded-allow-ips TEXT      Comma seperated list of IPs to trust with
-                                proxy headers. Defaults to the
-                                $FORWARDED_ALLOW_IPS environment variable if
-                                available, or &#39;127.0.0.1&#39;.
---root-path TEXT                Set the ASGI &#39;root_path&#39; for applications
-                                submounted below a given URL path.
---limit-concurrency INTEGER     Maximum number of concurrent connections or
-                                tasks to allow, before issuing HTTP 503
-                                responses.
---limit-max-requests INTEGER    Maximum number of requests to service before
-                                terminating the process.
---timeout-keep-alive INTEGER    Close Keep-Alive connections if no new data
-                                is received within this timeout.  [default:
-                                5]
---ssl-keyfile TEXT              SSL key file
---ssl-certfile TEXT             SSL certificate file
---ssl-version INTEGER           SSL version to use (see stdlib ssl module&#39;s)
-                                [default: 2]
---ssl-cert-reqs INTEGER         Whether client certificate is required (see
-                                stdlib ssl module&#39;s)  [default: 0]
---ssl-ca-certs TEXT             CA certificates file
---ssl-ciphers TEXT              Ciphers to use (see stdlib ssl module&#39;s)
-                                [default: TLSv1]
---header TEXT                   Specify custom default HTTP response headers
-                                as a Name:Value pair
---help                          Show this message and exit.
+  --host TEXT                     Bind socket to this host.  [default:
+                                  127.0.0.1]
+  --port INTEGER                  Bind socket to this port.  [default: 8000]
+  --uds TEXT                      Bind to a UNIX domain socket.
+  --fd INTEGER                    Bind to socket from this file descriptor.
+  --reload                        Enable auto-reload.
+  --reload-dir TEXT               Set reload directories explicitly, instead
+                                  of using the current working directory.
+  --workers INTEGER               Number of worker processes. Defaults to the
+                                  $WEB_CONCURRENCY environment variable if
+                                  available. Not valid with --reload.
+  --loop [auto|asyncio|uvloop|iocp]
+                                  Event loop implementation.  [default: auto]
+  --http [auto|h11|httptools]     HTTP protocol implementation.  [default:
+                                  auto]
+  --ws [auto|none|websockets|wsproto]
+                                  WebSocket protocol implementation.
+                                  [default: auto]
+  --lifespan [auto|on|off]        Lifespan implementation.  [default: auto]
+  --interface [auto|asgi3|asgi2|wsgi]
+                                  Select ASGI3, ASGI2, or WSGI as the
+                                  application interface.  [default: auto]
+  --env-file PATH                 Environment configuration file.
+  --log-config PATH               Logging configuration file.
+  --log-level [critical|error|warning|info|debug|trace]
+                                  Log level. [default: info]
+  --access-log / --no-access-log  Enable/Disable access log.
+  --use-colors / --no-use-colors  Enable/Disable colorized logging.
+  --proxy-headers / --no-proxy-headers
+                                  Enable/Disable X-Forwarded-Proto,
+                                  X-Forwarded-For, X-Forwarded-Port to
+                                  populate remote address info.
+  --forwarded-allow-ips TEXT      Comma separated list of IPs to trust with
+                                  proxy headers. Defaults to the
+                                  $FORWARDED_ALLOW_IPS environment variable if
+                                  available, or &#39;127.0.0.1&#39;.
+  --root-path TEXT                Set the ASGI &#39;root_path&#39; for applications
+                                  submounted below a given URL path.
+  --limit-concurrency INTEGER     Maximum number of concurrent connections or
+                                  tasks to allow, before issuing HTTP 503
+                                  responses.
+  --backlog INTEGER               Maximum number of connections to hold in
+                                  backlog
+  --limit-max-requests INTEGER    Maximum number of requests to service before
+                                  terminating the process.
+  --timeout-keep-alive INTEGER    Close Keep-Alive connections if no new data
+                                  is received within this timeout.  [default:
+                                  5]
+  --ssl-keyfile TEXT              SSL key file
+  --ssl-certfile TEXT             SSL certificate file
+  --ssl-version INTEGER           SSL version to use (see stdlib ssl module&#39;s)
+                                  [default: 2]
+  --ssl-cert-reqs INTEGER         Whether client certificate is required (see
+                                  stdlib ssl module&#39;s)  [default: 0]
+  --ssl-ca-certs TEXT             CA certificates file
+  --ssl-ciphers TEXT              Ciphers to use (see stdlib ssl module&#39;s)
+                                  [default: TLSv1]
+  --header TEXT                   Specify custom default HTTP response headers
+                                  as a Name:Value pair
+  --help                          Show this message and exit.
 </pre></div>
 
 
@@ -762,7 +764,7 @@ Options:
 <p><strong>example.py</strong>:</p>
 <div class="codehilite"><pre><span></span><span class="kn">import</span> <span class="nn">uvicorn</span>
 
-<span class="n">async</span> <span class="k">def</span> <span class="nf">app</span><span class="p">(</span><span class="n">scope</span><span class="p">,</span> <span class="n">receive</span><span class="p">,</span> <span class="n">send</span><span class="p">):</span>
+<span class="k">async</span> <span class="k">def</span> <span class="nf">app</span><span class="p">(</span><span class="n">scope</span><span class="p">,</span> <span class="n">receive</span><span class="p">,</span> <span class="n">send</span><span class="p">):</span>
     <span class="o">...</span>
 
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
@@ -793,7 +795,7 @@ fly, restart worker processes gracefully, or perform server upgrades without dow
 <li><code>send</code> - A channel on which to send outgoing messages to the server.</li>
 </ul>
 <p>Two common patterns you might use are either function-based applications:</p>
-<div class="codehilite"><pre><span></span><span class="n">async</span> <span class="k">def</span> <span class="nf">app</span><span class="p">(</span><span class="n">scope</span><span class="p">,</span> <span class="n">receive</span><span class="p">,</span> <span class="n">send</span><span class="p">):</span>
+<div class="codehilite"><pre><span></span><span class="k">async</span> <span class="k">def</span> <span class="nf">app</span><span class="p">(</span><span class="n">scope</span><span class="p">,</span> <span class="n">receive</span><span class="p">,</span> <span class="n">send</span><span class="p">):</span>
     <span class="k">assert</span> <span class="n">scope</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;http&#39;</span>
     <span class="o">...</span>
 </pre></div>
@@ -801,7 +803,7 @@ fly, restart worker processes gracefully, or perform server upgrades without dow
 
 <p>Or instance-based applications:</p>
 <div class="codehilite"><pre><span></span><span class="k">class</span> <span class="nc">App</span><span class="p">:</span>
-    <span class="n">async</span> <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scope</span><span class="p">,</span> <span class="n">receive</span><span class="p">,</span> <span class="n">send</span><span class="p">):</span>
+    <span class="k">async</span> <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scope</span><span class="p">,</span> <span class="n">receive</span><span class="p">,</span> <span class="n">send</span><span class="p">):</span>
         <span class="k">assert</span> <span class="n">scope</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;http&#39;</span>
         <span class="o">...</span>
 
@@ -834,14 +836,14 @@ that they do not handle.</p>
 
 <h3 id="http-messages">HTTP Messages</h3>
 <p>The instance coroutine communicates back to the server by sending messages to the <code>send</code> coroutine.</p>
-<div class="codehilite"><pre><span></span><span class="n">await</span> <span class="n">send</span><span class="p">({</span>
+<div class="codehilite"><pre><span></span><span class="k">await</span> <span class="n">send</span><span class="p">({</span>
     <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;http.request.start&#39;</span><span class="p">,</span>
     <span class="s1">&#39;status&#39;</span><span class="p">:</span> <span class="mi">200</span><span class="p">,</span>
     <span class="s1">&#39;headers&#39;</span><span class="p">:</span> <span class="p">[</span>
         <span class="p">[</span><span class="sa">b</span><span class="s1">&#39;content-type&#39;</span><span class="p">,</span> <span class="sa">b</span><span class="s1">&#39;text/plain&#39;</span><span class="p">],</span>
     <span class="p">]</span>
 <span class="p">})</span>
-<span class="n">await</span> <span class="n">send</span><span class="p">({</span>
+<span class="k">await</span> <span class="n">send</span><span class="p">({</span>
     <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;http.request.body&#39;</span><span class="p">,</span>
     <span class="s1">&#39;body&#39;</span><span class="p">:</span> <span class="sa">b</span><span class="s1">&#39;Hello, world!&#39;</span><span class="p">,</span>
 <span class="p">})</span>
@@ -850,21 +852,21 @@ that they do not handle.</p>
 
 <h3 id="requests-responses">Requests &amp; responses</h3>
 <p>Here's an example that displays the method and path used in the incoming request:</p>
-<div class="codehilite"><pre><span></span><span class="n">async</span> <span class="k">def</span> <span class="nf">app</span><span class="p">(</span><span class="n">scope</span><span class="p">,</span> <span class="n">receive</span><span class="p">,</span> <span class="n">send</span><span class="p">):</span>
+<div class="codehilite"><pre><span></span><span class="k">async</span> <span class="k">def</span> <span class="nf">app</span><span class="p">(</span><span class="n">scope</span><span class="p">,</span> <span class="n">receive</span><span class="p">,</span> <span class="n">send</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Echo the method and path back in an HTTP response.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">assert</span> <span class="n">scope</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;http&#39;</span>
 
-    <span class="n">body</span> <span class="o">=</span> <span class="n">f</span><span class="s1">&#39;Received {scope[&quot;method&quot;]} request to {scope[&quot;path&quot;]}&#39;</span>
-    <span class="n">await</span> <span class="n">send</span><span class="p">({</span>
+    <span class="n">body</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;Received </span><span class="si">{scope[&quot;method&quot;]}</span><span class="s1"> request to </span><span class="si">{scope[&quot;path&quot;]}</span><span class="s1">&#39;</span>
+    <span class="k">await</span> <span class="n">send</span><span class="p">({</span>
         <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;http.response.start&#39;</span><span class="p">,</span>
         <span class="s1">&#39;status&#39;</span><span class="p">:</span> <span class="mi">200</span><span class="p">,</span>
         <span class="s1">&#39;headers&#39;</span><span class="p">:</span> <span class="p">[</span>
             <span class="p">[</span><span class="sa">b</span><span class="s1">&#39;content-type&#39;</span><span class="p">,</span> <span class="sa">b</span><span class="s1">&#39;text/plain&#39;</span><span class="p">],</span>
         <span class="p">]</span>
     <span class="p">})</span>
-    <span class="n">await</span> <span class="n">send</span><span class="p">({</span>
+    <span class="k">await</span> <span class="n">send</span><span class="p">({</span>
         <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;http.response.body&#39;</span><span class="p">,</span>
         <span class="s1">&#39;body&#39;</span><span class="p">:</span> <span class="n">body</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">),</span>
     <span class="p">})</span>
@@ -874,34 +876,34 @@ that they do not handle.</p>
 <h3 id="reading-the-request-body">Reading the request body</h3>
 <p>You can stream the request body without blocking the asyncio task pool,
 by fetching messages from the <code>receive</code> coroutine.</p>
-<div class="codehilite"><pre><span></span><span class="n">async</span> <span class="k">def</span> <span class="nf">read_body</span><span class="p">(</span><span class="n">receive</span><span class="p">):</span>
+<div class="codehilite"><pre><span></span><span class="k">async</span> <span class="k">def</span> <span class="nf">read_body</span><span class="p">(</span><span class="n">receive</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Read and return the entire body from an incoming ASGI message.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">body</span> <span class="o">=</span> <span class="sa">b</span><span class="s1">&#39;&#39;</span>
-    <span class="n">more_body</span> <span class="o">=</span> <span class="bp">True</span>
+    <span class="n">more_body</span> <span class="o">=</span> <span class="kc">True</span>
 
     <span class="k">while</span> <span class="n">more_body</span><span class="p">:</span>
-        <span class="n">message</span> <span class="o">=</span> <span class="n">await</span> <span class="n">receive</span><span class="p">()</span>
+        <span class="n">message</span> <span class="o">=</span> <span class="k">await</span> <span class="n">receive</span><span class="p">()</span>
         <span class="n">body</span> <span class="o">+=</span> <span class="n">message</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;body&#39;</span><span class="p">,</span> <span class="sa">b</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
-        <span class="n">more_body</span> <span class="o">=</span> <span class="n">message</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;more_body&#39;</span><span class="p">,</span> <span class="bp">False</span><span class="p">)</span>
+        <span class="n">more_body</span> <span class="o">=</span> <span class="n">message</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;more_body&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">body</span>
 
 
-<span class="n">async</span> <span class="k">def</span> <span class="nf">app</span><span class="p">(</span><span class="n">scope</span><span class="p">,</span> <span class="n">receive</span><span class="p">,</span> <span class="n">send</span><span class="p">):</span>
+<span class="k">async</span> <span class="k">def</span> <span class="nf">app</span><span class="p">(</span><span class="n">scope</span><span class="p">,</span> <span class="n">receive</span><span class="p">,</span> <span class="n">send</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Echo the request body back in an HTTP response.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">body</span> <span class="o">=</span> <span class="n">await</span> <span class="n">read_body</span><span class="p">(</span><span class="n">receive</span><span class="p">)</span>
-    <span class="n">await</span> <span class="n">send</span><span class="p">({</span>
+    <span class="n">body</span> <span class="o">=</span> <span class="k">await</span> <span class="n">read_body</span><span class="p">(</span><span class="n">receive</span><span class="p">)</span>
+    <span class="k">await</span> <span class="n">send</span><span class="p">({</span>
         <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;http.response.start&#39;</span><span class="p">,</span>
         <span class="s1">&#39;status&#39;</span><span class="p">:</span> <span class="mi">200</span><span class="p">,</span>
         <span class="s1">&#39;headers&#39;</span><span class="p">:</span> <span class="p">[</span>
             <span class="p">[</span><span class="sa">b</span><span class="s1">&#39;content-type&#39;</span><span class="p">,</span> <span class="sa">b</span><span class="s1">&#39;text/plain&#39;</span><span class="p">],</span>
         <span class="p">]</span>
     <span class="p">})</span>
-    <span class="n">await</span> <span class="n">send</span><span class="p">({</span>
+    <span class="k">await</span> <span class="n">send</span><span class="p">({</span>
         <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;http.response.body&#39;</span><span class="p">,</span>
         <span class="s1">&#39;body&#39;</span><span class="p">:</span> <span class="n">body</span><span class="p">,</span>
     <span class="p">})</span>
@@ -914,11 +916,11 @@ the <code>send</code> coroutine.</p>
 <div class="codehilite"><pre><span></span><span class="kn">import</span> <span class="nn">asyncio</span>
 
 
-<span class="n">async</span> <span class="k">def</span> <span class="nf">app</span><span class="p">(</span><span class="n">scope</span><span class="p">,</span> <span class="n">receive</span><span class="p">,</span> <span class="n">send</span><span class="p">):</span>
+<span class="k">async</span> <span class="k">def</span> <span class="nf">app</span><span class="p">(</span><span class="n">scope</span><span class="p">,</span> <span class="n">receive</span><span class="p">,</span> <span class="n">send</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Send a slowly streaming HTTP response back to the client.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">await</span> <span class="n">send</span><span class="p">({</span>
+    <span class="k">await</span> <span class="n">send</span><span class="p">({</span>
         <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;http.response.start&#39;</span><span class="p">,</span>
         <span class="s1">&#39;status&#39;</span><span class="p">:</span> <span class="mi">200</span><span class="p">,</span>
         <span class="s1">&#39;headers&#39;</span><span class="p">:</span> <span class="p">[</span>
@@ -926,13 +928,13 @@ the <code>send</code> coroutine.</p>
         <span class="p">]</span>
     <span class="p">})</span>
     <span class="k">for</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="p">[</span><span class="sa">b</span><span class="s1">&#39;Hello&#39;</span><span class="p">,</span> <span class="sa">b</span><span class="s1">&#39;, &#39;</span><span class="p">,</span> <span class="sa">b</span><span class="s1">&#39;world!&#39;</span><span class="p">]:</span>
-        <span class="n">await</span> <span class="n">send</span><span class="p">({</span>
+        <span class="k">await</span> <span class="n">send</span><span class="p">({</span>
             <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;http.response.body&#39;</span><span class="p">,</span>
             <span class="s1">&#39;body&#39;</span><span class="p">:</span> <span class="n">chunk</span><span class="p">,</span>
-            <span class="s1">&#39;more_body&#39;</span><span class="p">:</span> <span class="bp">True</span>
+            <span class="s1">&#39;more_body&#39;</span><span class="p">:</span> <span class="kc">True</span>
         <span class="p">})</span>
-        <span class="n">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-    <span class="n">await</span> <span class="n">send</span><span class="p">({</span>
+        <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">await</span> <span class="n">send</span><span class="p">({</span>
         <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;http.response.body&#39;</span><span class="p">,</span>
         <span class="s1">&#39;body&#39;</span><span class="p">:</span> <span class="sa">b</span><span class="s1">&#39;&#39;</span><span class="p">,</span>
     <span class="p">})</span>
@@ -979,6 +981,7 @@ with application code still running in a standard threaded context.</p>
 <p>You write your API function parameters with Python 3.6+ type declarations and get automatic data conversion, data validation, OpenAPI schemas (with JSON Schemas) and interactive API documentation UIs.</p>
                 
                   
+                
                 
               
               
@@ -1032,9 +1035,13 @@ with application code still running in a standard threaded context.</p>
       
     </div>
     
-      <script src="assets/javascripts/application.c648116f.js"></script>
+      <script src="assets/javascripts/application.808e90bb.js"></script>
       
       <script>app.initialize({version:"1.0.4",url:{base:"."}})</script>
+      
+        <script src="js/chat.js"></script>
+      
+        <script src="js/sidecar-1.5.0.js"></script>
       
     
   </body>

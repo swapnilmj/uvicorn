@@ -34,7 +34,7 @@
         <meta name="lang:search.tokenizer" content="[\s\-]+">
       
       <link rel="shortcut icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.0.4, mkdocs-material-4.4.2">
+      <meta name="generator" content="mkdocs-1.0.4, mkdocs-material-4.6.0">
     
     
       
@@ -42,17 +42,17 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/application.30686662.css">
+      <link rel="stylesheet" href="../assets/stylesheets/application.1b62728e.css">
       
       
     
     
-      <script src="../assets/javascripts/modernizr.74668098.js"></script>
+      <script src="../assets/javascripts/modernizr.268332fc.js"></script>
     
     
       
         <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700|Roboto+Mono&display=fallback">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700%7CRoboto+Mono&display=fallback">
         <style>body,input{font-family:"Roboto","Helvetica Neue",Helvetica,Arial,sans-serif}code,kbd,pre{font-family:"Roboto Mono","Courier New",Courier,monospace}</style>
       
     
@@ -509,6 +509,7 @@ equivalent keyword arguments, eg. <code>uvicorn.run("example:app", port=5000, re
 <li><code>--log-config &lt;path&gt;</code> - Logging configuration file.</li>
 <li><code>--log-level &lt;str&gt;</code> - Set the log level. <strong>Options:</strong> <em>'critical', 'error', 'warning', 'info', 'debug', 'trace'.</em> <strong>Default:</strong> <em>'info'</em>.</li>
 <li><code>--no-access-log</code> - Disable access log only, without changing log level.</li>
+<li><code>--use-colors / --no-use-colors</code> - Enable / disable colorized formatting of the log records, in case this is not set it will be auto-detected.</li>
 </ul>
 <h2 id="implementation">Implementation</h2>
 <ul>
@@ -543,6 +544,7 @@ connecting IPs in the <code>forwarded-allow-ips</code> configuration.</li>
 <ul>
 <li><code>--limit-concurrency &lt;int&gt;</code> - Maximum number of concurrent connections or tasks to allow, before issuing HTTP 503 responses. Useful for ensuring known memory usage patterns even under over-resourced loads.</li>
 <li><code>--limit-max-requests &lt;int&gt;</code> - Maximum number of requests to service before terminating the process. Useful when running together with a process manager, for preventing memory leaks from impacting long-running processes.</li>
+<li><code>--backlog &lt;int&gt;</code> - Maximum number of connections to hold in backlog. Relevant for heavy incoming traffic.</li>
 </ul>
 <h2 id="timeouts">Timeouts</h2>
 <ul>
@@ -550,6 +552,7 @@ connecting IPs in the <code>forwarded-allow-ips</code> configuration.</li>
 </ul>
                 
                   
+                
                 
               
               
@@ -617,9 +620,13 @@ connecting IPs in the <code>forwarded-allow-ips</code> configuration.</li>
       
     </div>
     
-      <script src="../assets/javascripts/application.c648116f.js"></script>
+      <script src="../assets/javascripts/application.808e90bb.js"></script>
       
       <script>app.initialize({version:"1.0.4",url:{base:".."}})</script>
+      
+        <script src="../js/chat.js"></script>
+      
+        <script src="../js/sidecar-1.5.0.js"></script>
       
     
   </body>
