@@ -26,7 +26,7 @@ Uvicorn currently supports HTTP/1.1 and WebSockets. Support for HTTP/2 is planne
 
 ## Quickstart
 
-Requirements: Python 3.5, 3.6, 3.7
+Requirements: Python 3.6+ (For Python 3.5 support, install version 0.8.6.)
 
 Install using `pip`:
 
